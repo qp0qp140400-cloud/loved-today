@@ -197,6 +197,26 @@ function applyUser(user){
 }
 async function logout(button){if(!client)return;button.disabled=true;try{const {error}=await client.auth.signOut({scope:'local'});if(error)throw error;applyUser(null);recoveryMode=false;pendingFavorite=null;notify('로그아웃했어요. 다음에 또 만나요.');navigate('home');}catch(error){notify(friendlyError(error));}finally{if(button.isConnected)button.disabled=false;}}
 
+function shareContent(id){
+ const mood=moods.find(m=>m.id===id);if(!mood)return null;
+ const url=`${location.origin}${location.pathname}#word/${id}`;
+ return {url,text:`${mood.text}\n— ${mood.reference}\n${bibleEdition}\n${sourceUrl(mood)}\n\n오늘도, 사랑받는 당신\n${url}`};
+}
+function openShare(id){
+ const content=shareContent(id);if(!content)return;
+ showModal('말씀 나누기',`<p>마음에 닿은 말씀을 소중한 사람에게 전해 보세요.</p><label for="share-link">공유할 링크</label><input id="share-link" type="text" readonly value="${esc(content.url)}"><label for="share-text">말씀과 출처</label><textarea id="share-text" readonly rows="6">${esc(content.text)}</textarea><div class="modal-actions" style="justify-content:flex-start;flex-wrap:wrap"><button class="btn btn-primary" data-action="copy-share" data-id="${id}" data-kind="link">링크 복사</button><button class="btn btn-outline" data-action="copy-share" data-id="${id}" data-kind="verse">말씀과 링크 복사</button></div><p id="share-message" class="form-message" role="status" aria-live="polite"></p>`);
+}
+async function copyShare(id,kind,button){
+ const content=shareContent(id),message=$('#share-message');if(!content||!message)return;
+ button.disabled=true;
+ try{
+  await navigator.clipboard.writeText(kind==='link'?content.url:content.text);
+  if(message.isConnected){message.className='form-message success';message.textContent=kind==='link'?'링크를 복사했어요. 원하는 곳에 붙여넣어 주세요.':'말씀과 출처, 링크를 함께 복사했어요.';}
+ }catch{
+  if(message.isConnected){const field=$(kind==='link'?'#share-link':'#share-text');field?.focus();field?.select();message.className='form-message';message.textContent='선택된 내용을 직접 복사해 주세요. 컴퓨터에서는 Ctrl+C를 누르면 됩니다.';}
+ }finally{if(button.isConnected)button.disabled=false;}
+}
+
 document.addEventListener('click',async event=>{
  const button=event.target.closest('[data-action]');if(!button||button.disabled)return;const action=button.dataset.action,id=button.dataset.id;
  if(action==='mood')navigate(`word/${id}`);
@@ -214,10 +234,8 @@ document.addEventListener('click',async event=>{
  if(action==='delete-entry')askDelete(id);
  if(action==='confirm-delete')await deleteEntry(id,button);
  if(action==='cancel-modal')closeModal();
- if(action==='share'){
-  const m=moods.find(x=>x.id===id);if(!m)return;const text=`${m.text}\n— ${m.reference}\n${bibleEdition}\n${sourceUrl(m)}`;
-  try{if(navigator.share)await navigator.share({title:'오늘도, 사랑받는 당신',text,url:`${location.origin}${location.pathname}#word/${id}`});else{await navigator.clipboard.writeText(text);notify('출처와 함께 말씀을 복사했어요.');}}catch(error){if(error.name!=='AbortError')showModal('말씀 나누기',`<p>아래 말씀을 선택해서 복사해 주세요.</p><textarea readonly aria-label="공유할 말씀">${esc(text)}</textarea>`);}
- }
+ if(action==='share')openShare(id);
+ if(action==='copy-share')await copyShare(id,button.dataset.kind,button);
  if(action==='sources')showSources();
  if(action==='privacy')showPrivacy();
  if(action==='help')showHelp();
