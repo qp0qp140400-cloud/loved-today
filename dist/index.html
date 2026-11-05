@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f8f7f2">
+  <meta name="description" content="어떤 마음으로 와도 괜찮아요. 성경 말씀과 작은 기도로 쉬어가는, 오늘도 사랑받는 당신을 위한 공간.">
+  <title>오늘도, 사랑받는 당신 | 말씀과 함께 쉬어가는 곳</title>
+  <link rel="icon" href="assets/sprout.svg" type="image/svg+xml">
+  <link rel="preconnect" href="fonts.googleapis.com">
+  <link rel="preconnect" href="fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=Noto+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <script src="config.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
+  <script type="module" src="app.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">본문으로 바로가기</a>
+  <header class="site-header">
+    <div class="header-inner">
+      <a href="#home" class="brand" aria-label="오늘도, 사랑받는 당신 홈"><span class="brand-symbol" id="brand-symbol"></span><span>오늘도, <strong>사랑받는 당신</strong><small>말씀과 함께 쉬어가는 곳</small></span></a>
+      <nav aria-label="주요 메뉴" id="desktop-nav"></nav>
+      <button class="login-button" id="account-button" type="button">로그인 <span aria-hidden="true">↗</span></button>
+    </div>
+  </header>
+  <main id="main" tabindex="-1"></main>
+  <footer class="site-footer">
+    <div><a class="footer-brand" href="#home">오늘도, 사랑받는 당신</a><p>서두르지 않아도 괜찮아요. 당신의 걸음에 함께할게요.</p></div>
+    <div class="footer-links"><button data-action="sources">콘텐츠와 출처</button><button data-action="privacy">개인정보 안내</button><button data-action="help">마음이 너무 힘들 때</button></div>
+    <p class="copyright">WITH LOVE & GRACE <span>작은 쉼이, 새로운 소망이 되기를.</span></p>
+  </footer>
+  <nav id="mobile-nav" class="mobile-nav" aria-label="모바일 주요 메뉴"></nav>
+  <dialog id="modal" aria-labelledby="modal-title"><button id="modal-close" class="icon-button modal-close" aria-label="창 닫기">✕</button><div id="modal-body"></div></dialog>
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <noscript><p class="notice">이 앱을 이용하려면 브라우저에서 JavaScript를 켜 주세요.</p></noscript>
+</body>
+</html>
